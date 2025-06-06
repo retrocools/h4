@@ -151,7 +151,7 @@ const ValueDisplay = ({
       {(subtitle || timestamp) && (
         <Box sx={{ mt: 'auto' }}>
           {subtitle && (
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2\" color="text.secondary">
               {subtitle}
             </Typography>
           )}
