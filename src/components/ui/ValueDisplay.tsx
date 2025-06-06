@@ -1,6 +1,7 @@
 import { Box, Typography, Paper } from '@mui/material';
 import { ReactNode, useState, useEffect } from 'react';
 import { TrendingUp, TrendingDown } from 'lucide-react';
+import StatusIndicator from './StatusIndicator';
 
 interface ValueDisplayProps {
   value: string | number;
@@ -10,9 +11,19 @@ interface ValueDisplayProps {
   subtitle?: string;
   timestamp?: string;
   showTrend?: boolean;
+  showStatusIndicator?: boolean;
 }
 
-const ValueDisplay = ({ value, unit, status, icon, subtitle, timestamp, showTrend = false }: ValueDisplayProps) => {
+const ValueDisplay = ({ 
+  value, 
+  unit, 
+  status, 
+  icon, 
+  subtitle, 
+  timestamp, 
+  showTrend = false,
+  showStatusIndicator = false
+}: ValueDisplayProps) => {
   const [prevValue, setPrevValue] = useState<number>(typeof value === 'number' ? value : 0);
   const [trend, setTrend] = useState<'up' | 'down' | null>(null);
 
@@ -76,58 +87,71 @@ const ValueDisplay = ({ value, unit, status, icon, subtitle, timestamp, showTren
         flexDirection: 'column',
       }}
     >
-      <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-        {icon && <Box sx={{ mr: 1, color: getStatusColor() }}>{icon}</Box>}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Typography 
-            variant="h4" 
-            component="div"
-            sx={{ 
-              fontWeight: 600,
-              color: getStatusColor(),
-              lineHeight: 1.2,
-            }}
-            className="value-change"
-          >
-            {value}
-            {unit && (
-              <Typography 
-                component="span" 
-                sx={{ 
-                  fontSize: '1rem', 
-                  verticalAlign: 'middle',
-                  ml: 0.5,
-                  color: getStatusColor(),
-                  opacity: 0.7
+      <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 1 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flex: 1 }}>
+          {icon && <Box sx={{ mr: 1, color: getStatusColor() }}>{icon}</Box>}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Typography 
+              variant="h4" 
+              component="div"
+              sx={{ 
+                fontWeight: 600,
+                color: getStatusColor(),
+                lineHeight: 1.2,
+              }}
+              className="value-change"
+            >
+              {value}
+              {unit && (
+                <Typography 
+                  component="span" 
+                  sx={{ 
+                    fontSize: '1rem', 
+                    verticalAlign: 'middle',
+                    ml: 0.5,
+                    color: getStatusColor(),
+                    opacity: 0.7
+                  }}
+                >
+                  {unit}
+                </Typography>
+              )}
+            </Typography>
+            {showTrend && trend && (
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  color: getTrendColor(trend),
+                  animation: 'fadeInOut 3s ease',
                 }}
               >
-                {unit}
-              </Typography>
+                {trend === 'up' ? (
+                  <TrendingUp size={24} strokeWidth={2.5} />
+                ) : (
+                  <TrendingDown size={24} strokeWidth={2.5} />
+                )}
+              </Box>
             )}
-          </Typography>
-          {showTrend && trend && (
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                color: getTrendColor(trend),
-                animation: 'fadeInOut 3s ease',
-              }}
-            >
-              {trend === 'up' ? (
-                <TrendingUp size={24} strokeWidth={2.5} />
-              ) : (
-                <TrendingDown size={24} strokeWidth={2.5} />
-              )}
-            </Box>
-          )}
+          </Box>
         </Box>
+        
+        {/* Status Indicator on the right */}
+        {showStatusIndicator && (
+          <Box sx={{ ml: 2, alignSelf: 'center' }}>
+            <StatusIndicator 
+              status={status} 
+              label={status === 'normal' ? 'NORMAL' : status === 'warning' ? 'WARNING' : 'CRITICAL'}
+              glowing={status === 'normal'}
+            />
+          </Box>
+        )}
       </Box>
 
       {(subtitle || timestamp) && (
         <Box sx={{ mt: 'auto' }}>
           {subtitle && (
-            <Typography variant="body2\" color="text.secondary">
+            <Typography variant="body2" color="text.secondary">
               {subtitle}
             </Typography>
           )}

@@ -85,6 +85,7 @@ const TemperatureHumiditySection = ({
                   icon={<Thermometer size={20} />}
                   timestamp={formatTime(data.nocTemperature.waktu)}
                   showTrend={true}
+                  showStatusIndicator={true}
                 />
               )}
             </Box>
@@ -106,6 +107,7 @@ const TemperatureHumiditySection = ({
                   icon={<Thermometer size={20} />}
                   timestamp={formatTime(data.upsTemperature.waktu)}
                   showTrend={true}
+                  showStatusIndicator={true}
                 />
               )}
             </Box>
@@ -127,6 +129,7 @@ const TemperatureHumiditySection = ({
                   icon={<Droplets size={20} />}
                   timestamp={formatTime(data.nocHumidity.waktu)}
                   showTrend={true}
+                  showStatusIndicator={true}
                 />
               )}
             </Box>
@@ -148,6 +151,7 @@ const TemperatureHumiditySection = ({
                   icon={<Droplets size={20} />}
                   timestamp={formatTime(data.upsHumidity.waktu)}
                   showTrend={true}
+                  showStatusIndicator={true}
                 />
               )}
             </Box>

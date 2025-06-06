@@ -7,10 +7,13 @@ import {
   CartesianGrid, 
   Tooltip, 
   Legend,
-  ReferenceArea
+  ReferenceArea,
+  Brush
 } from 'recharts';
-import { Typography, Box } from '@mui/material';
+import { Typography, Box, IconButton, Stack } from '@mui/material';
 import { format, parseISO } from 'date-fns';
+import { ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
+import { useState, useCallback } from 'react';
 
 interface DataPoint {
   timestamp: string;
@@ -24,6 +27,11 @@ interface HumidityChartProps {
 }
 
 const HumidityChart = ({ nocData, upsData, timeRange }: HumidityChartProps) => {
+  const [zoomDomain, setZoomDomain] = useState<{ left?: string; right?: string } | null>(null);
+  const [refAreaLeft, setRefAreaLeft] = useState<string>('');
+  const [refAreaRight, setRefAreaRight] = useState<string>('');
+  const [isZooming, setIsZooming] = useState(false);
+
   // Combine data for chart
   const mergedData = nocData.map((item, index) => ({
     timestamp: item.timestamp,
@@ -101,12 +109,82 @@ const HumidityChart = ({ nocData, upsData, timeRange }: HumidityChartProps) => {
     return null;
   };
 
+  const handleMouseDown = useCallback((e: any) => {
+    if (e && e.activeLabel) {
+      setRefAreaLeft(e.activeLabel);
+      setIsZooming(true);
+    }
+  }, []);
+
+  const handleMouseMove = useCallback((e: any) => {
+    if (isZooming && e && e.activeLabel) {
+      setRefAreaRight(e.activeLabel);
+    }
+  }, [isZooming]);
+
+  const handleMouseUp = useCallback(() => {
+    if (refAreaLeft && refAreaRight && refAreaLeft !== refAreaRight) {
+      const left = refAreaLeft < refAreaRight ? refAreaLeft : refAreaRight;
+      const right = refAreaLeft < refAreaRight ? refAreaRight : refAreaLeft;
+      setZoomDomain({ left, right });
+    }
+    setRefAreaLeft('');
+    setRefAreaRight('');
+    setIsZooming(false);
+  }, [refAreaLeft, refAreaRight]);
+
+  const handleZoomOut = () => {
+    setZoomDomain(null);
+    setRefAreaLeft('');
+    setRefAreaRight('');
+    setIsZooming(false);
+  };
+
+  const getDisplayData = () => {
+    if (!zoomDomain) return mergedData;
+    
+    return mergedData.filter(item => {
+      const timestamp = item.timestamp;
+      return timestamp >= zoomDomain.left! && timestamp <= zoomDomain.right!;
+    });
+  };
+
   return (
-    <Box sx={{ width: '100%', height: 300 }}>
+    <Box sx={{ width: '100%', height: 350 }}>
+      <Stack direction="row" spacing={1} sx={{ mb: 2, justifyContent: 'flex-end' }}>
+        <IconButton
+          size="small"
+          onClick={handleZoomOut}
+          disabled={!zoomDomain}
+          sx={{
+            bgcolor: 'rgba(63, 136, 242, 0.1)',
+            border: '1px solid rgba(63, 136, 242, 0.3)',
+            '&:hover': {
+              bgcolor: 'rgba(63, 136, 242, 0.2)',
+            },
+            '&:disabled': {
+              opacity: 0.5,
+            }
+          }}
+        >
+          <RotateCcw size={16} />
+        </IconButton>
+        <Typography variant="caption" sx={{ 
+          alignSelf: 'center', 
+          color: 'text.secondary',
+          px: 1
+        }}>
+          {zoomDomain ? 'Zoomed View' : 'Click and drag to zoom'}
+        </Typography>
+      </Stack>
+
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
-          data={mergedData}
+          data={getDisplayData()}
           margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
         >
           <CartesianGrid strokeDasharray="3 3" opacity={0.1} />
           <XAxis 
@@ -114,6 +192,7 @@ const HumidityChart = ({ nocData, upsData, timeRange }: HumidityChartProps) => {
             tickFormatter={formatXAxis} 
             stroke="#aaa"
             tick={{ fill: '#aaa', fontSize: 12 }}
+            domain={zoomDomain ? [zoomDomain.left!, zoomDomain.right!] : ['dataMin', 'dataMax']}
           />
           <YAxis 
             stroke="#aaa"
@@ -133,6 +212,17 @@ const HumidityChart = ({ nocData, upsData, timeRange }: HumidityChartProps) => {
           <ReferenceArea y1={70} y2={80} fill="#ffb74d" fillOpacity={0.2} />
           <ReferenceArea y1={80} y2={90} fill="#ff5252" fillOpacity={0.2} />
           
+          {/* Zoom selection area */}
+          {refAreaLeft && refAreaRight && (
+            <ReferenceArea
+              x1={refAreaLeft}
+              x2={refAreaRight}
+              strokeOpacity={0.3}
+              fill="rgba(63, 136, 242, 0.2)"
+              fillOpacity={0.3}
+            />
+          )}
+          
           <Line 
             type="monotone" 
             dataKey="nocHumidity" 
@@ -151,6 +241,16 @@ const HumidityChart = ({ nocData, upsData, timeRange }: HumidityChartProps) => {
             activeDot={{ r: 6 }}
             strokeWidth={2}
           />
+
+          {!zoomDomain && (
+            <Brush
+              dataKey="timestamp"
+              height={30}
+              stroke="rgba(63, 136, 242, 0.5)"
+              fill="rgba(63, 136, 242, 0.1)"
+              tickFormatter={formatXAxis}
+            />
+          )}
         </LineChart>
       </ResponsiveContainer>
     </Box>

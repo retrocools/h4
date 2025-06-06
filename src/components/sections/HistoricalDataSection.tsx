@@ -210,7 +210,7 @@ const HistoricalDataSection = ({ data, loading, isMobile }: HistoricalDataSectio
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <BarChart3 size={24} color="#3f88f2" />
             <Typography variant="h5" sx={{ ml: 1, fontWeight: 600 }}>
-              Historical Data
+              Historical Data Analytics
             </Typography>
           </Box>
         } 
@@ -264,6 +264,7 @@ const HistoricalDataSection = ({ data, loading, isMobile }: HistoricalDataSectio
                 border: '1px solid rgba(255, 255, 255, 0.1)',
                 '.MuiToggleButton-root': {
                   color: 'text.secondary',
+                  border: 'none',
                   '&.Mui-selected': {
                     color: 'primary.main',
                     backgroundColor: 'rgba(63, 136, 242, 0.1)',
@@ -326,7 +327,7 @@ const HistoricalDataSection = ({ data, loading, isMobile }: HistoricalDataSectio
       
       <CardContent>
         {loading ? (
-          <Skeleton variant="rectangular" height={300} width="100%" />
+          <Skeleton variant="rectangular" height={350} width="100%" />
         ) : (
           <Box sx={{ mt: 1 }}>
             {activeTab === 0 && (
