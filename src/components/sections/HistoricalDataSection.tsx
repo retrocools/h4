@@ -419,13 +419,14 @@ const HistoricalDataSection = ({ data, loading, isMobile }: HistoricalDataSectio
         </Tabs>
       </Box>
       
-      <CardContent sx={{ pt: 2 }}>
+      <CardContent sx={{ pt: 2, pb: 1 }}>
         {chartContent}
         
+        {/* Moved info box down with more spacing */}
         <Fade in timeout={800}>
           <Box 
             sx={{ 
-              mt: 2, 
+              mt: 4, // Increased margin top to push it down
               p: 2,
               borderRadius: 2,
               bgcolor: 'rgba(63, 136, 242, 0.08)', 

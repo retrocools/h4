@@ -41,17 +41,19 @@ const GaugeChart = ({ value, title, min, max, unit, color, thresholds }: GaugeCh
   ];
 
   return (
-    <Box sx={{ width: '100%', height: 200, position: 'relative' }}>
-      <Typography 
-        variant="subtitle1" 
-        sx={{ 
-          textAlign: 'center', 
-          mb: 1,
-          fontWeight: 500
-        }}
-      >
-        {title}
-      </Typography>
+    <Box sx={{ width: '100%', height: 160, position: 'relative' }}>
+      {title && (
+        <Typography 
+          variant="subtitle1" 
+          sx={{ 
+            textAlign: 'center', 
+            mb: 1,
+            fontWeight: 500
+          }}
+        >
+          {title}
+        </Typography>
+      )}
       
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
@@ -59,11 +61,11 @@ const GaugeChart = ({ value, title, min, max, unit, color, thresholds }: GaugeCh
           <Pie
             data={backgroundData}
             cx="50%"
-            cy="80%"
+            cy="85%"
             startAngle={180}
             endAngle={0}
-            innerRadius={60}
-            outerRadius={70}
+            innerRadius={50}
+            outerRadius={60}
             paddingAngle={0}
             dataKey="value"
           >
@@ -76,11 +78,11 @@ const GaugeChart = ({ value, title, min, max, unit, color, thresholds }: GaugeCh
           <Pie
             data={data}
             cx="50%"
-            cy="80%"
+            cy="85%"
             startAngle={180}
             endAngle={0}
-            innerRadius={50}
-            outerRadius={60}
+            innerRadius={40}
+            outerRadius={50}
             paddingAngle={0}
             dataKey="value"
           >
@@ -93,22 +95,22 @@ const GaugeChart = ({ value, title, min, max, unit, color, thresholds }: GaugeCh
                   <g>
                     <text
                       x={cx}
-                      y={cy - 5}
+                      y={cy - 10}
                       textAnchor="middle"
                       dominantBaseline="central"
                       fill="#fff"
-                      fontSize="22"
+                      fontSize="20"
                       fontWeight="bold"
                     >
                       {value.toFixed(1)}
                     </text>
                     <text
                       x={cx}
-                      y={cy + 20}
+                      y={cy + 10}
                       textAnchor="middle"
                       dominantBaseline="central"
                       fill="#aaa"
-                      fontSize="12"
+                      fontSize="11"
                     >
                       {unit}
                     </text>
@@ -130,7 +132,7 @@ const GaugeChart = ({ value, title, min, max, unit, color, thresholds }: GaugeCh
       <Box 
         sx={{ 
           position: 'absolute', 
-          bottom: 10, 
+          bottom: 5, 
           left: 0, 
           width: '100%', 
           display: 'flex', 

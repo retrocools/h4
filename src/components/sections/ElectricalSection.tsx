@@ -64,13 +64,13 @@ const ElectricalSection = ({ data, loading, thresholds }: ElectricalSectionProps
           {/* Phase Voltage Gauges */}
           <Grid item xs={12} md={7}>
             <Box sx={{ mb: 2 }}>
-              <Typography variant="subtitle1" sx={{ mb: 1, opacity: 0.7 }}>
+              <Typography variant="subtitle1" sx={{ mb: 2, opacity: 0.7 }}>
                 Phase Voltage Monitoring
               </Typography>
               {loading ? (
                 <Skeleton variant="rectangular" height={280} width="100%" />
               ) : (
-                <Grid container spacing={1} sx={{ mt: 1 }}>
+                <Grid container spacing={1}>
                   <Grid item xs={12} md={4}>
                     <Box sx={{ position: 'relative', textAlign: 'center' }}>
                       {/* Phase Title */}
@@ -78,7 +78,7 @@ const ElectricalSection = ({ data, loading, thresholds }: ElectricalSectionProps
                         Phase R
                       </Typography>
                       
-                      {/* Status indicator positioned directly below title with minimal spacing */}
+                      {/* Status indicator positioned at the top */}
                       <Box sx={{ 
                         display: 'flex', 
                         justifyContent: 'center', 
@@ -91,19 +91,21 @@ const ElectricalSection = ({ data, loading, thresholds }: ElectricalSectionProps
                         />
                       </Box>
                       
-                      {/* Gauge Chart */}
-                      <GaugeChart
-                        value={data.phase_r}
-                        title=""
-                        min={180}
-                        max={260}
-                        unit="V"
-                        color={getStatusColor(getVoltageStatus(data.phase_r))}
-                        thresholds={{
-                          danger: [thresholds.critical.low, thresholds.critical.high],
-                          warning: [thresholds.warning.low, thresholds.warning.high]
-                        }}
-                      />
+                      {/* Gauge Chart - moved up */}
+                      <Box sx={{ mt: -1 }}>
+                        <GaugeChart
+                          value={data.phase_r}
+                          title=""
+                          min={180}
+                          max={260}
+                          unit="V"
+                          color={getStatusColor(getVoltageStatus(data.phase_r))}
+                          thresholds={{
+                            danger: [thresholds.critical.low, thresholds.critical.high],
+                            warning: [thresholds.warning.low, thresholds.warning.high]
+                          }}
+                        />
+                      </Box>
                     </Box>
                   </Grid>
                   <Grid item xs={12} md={4}>
@@ -113,7 +115,7 @@ const ElectricalSection = ({ data, loading, thresholds }: ElectricalSectionProps
                         Phase S
                       </Typography>
                       
-                      {/* Status indicator positioned directly below title with minimal spacing */}
+                      {/* Status indicator positioned at the top */}
                       <Box sx={{ 
                         display: 'flex', 
                         justifyContent: 'center', 
@@ -126,19 +128,21 @@ const ElectricalSection = ({ data, loading, thresholds }: ElectricalSectionProps
                         />
                       </Box>
                       
-                      {/* Gauge Chart */}
-                      <GaugeChart
-                        value={data.phase_s}
-                        title=""
-                        min={180}
-                        max={260}
-                        unit="V"
-                        color={getStatusColor(getVoltageStatus(data.phase_s))}
-                        thresholds={{
-                          danger: [thresholds.critical.low, thresholds.critical.high],
-                          warning: [thresholds.warning.low, thresholds.warning.high]
-                        }}
-                      />
+                      {/* Gauge Chart - moved up */}
+                      <Box sx={{ mt: -1 }}>
+                        <GaugeChart
+                          value={data.phase_s}
+                          title=""
+                          min={180}
+                          max={260}
+                          unit="V"
+                          color={getStatusColor(getVoltageStatus(data.phase_s))}
+                          thresholds={{
+                            danger: [thresholds.critical.low, thresholds.critical.high],
+                            warning: [thresholds.warning.low, thresholds.warning.high]
+                          }}
+                        />
+                      </Box>
                     </Box>
                   </Grid>
                   <Grid item xs={12} md={4}>
@@ -148,7 +152,7 @@ const ElectricalSection = ({ data, loading, thresholds }: ElectricalSectionProps
                         Phase T
                       </Typography>
                       
-                      {/* Status indicator positioned directly below title with minimal spacing */}
+                      {/* Status indicator positioned at the top */}
                       <Box sx={{ 
                         display: 'flex', 
                         justifyContent: 'center', 
@@ -161,19 +165,21 @@ const ElectricalSection = ({ data, loading, thresholds }: ElectricalSectionProps
                         />
                       </Box>
                       
-                      {/* Gauge Chart */}
-                      <GaugeChart
-                        value={data.phase_t}
-                        title=""
-                        min={180}
-                        max={260}
-                        unit="V"
-                        color={getStatusColor(getVoltageStatus(data.phase_t))}
-                        thresholds={{
-                          danger: [thresholds.critical.low, thresholds.critical.high],
-                          warning: [thresholds.warning.low, thresholds.warning.high]
-                        }}
-                      />
+                      {/* Gauge Chart - moved up */}
+                      <Box sx={{ mt: -1 }}>
+                        <GaugeChart
+                          value={data.phase_t}
+                          title=""
+                          min={180}
+                          max={260}
+                          unit="V"
+                          color={getStatusColor(getVoltageStatus(data.phase_t))}
+                          thresholds={{
+                            danger: [thresholds.critical.low, thresholds.critical.high],
+                            warning: [thresholds.warning.low, thresholds.warning.high]
+                          }}
+                        />
+                      </Box>
                     </Box>
                   </Grid>
                 </Grid>
@@ -183,7 +189,7 @@ const ElectricalSection = ({ data, loading, thresholds }: ElectricalSectionProps
 
           {/* Additional Electrical Parameters */}
           <Grid item xs={12} md={5}>
-            <Typography variant="subtitle1" sx={{ mb: 1, opacity: 0.7 }}>
+            <Typography variant="subtitle1" sx={{ mb: 2, opacity: 0.7 }}>
               Power Monitoring
             </Typography>
             {loading ? (
@@ -232,9 +238,9 @@ const ElectricalSection = ({ data, loading, thresholds }: ElectricalSectionProps
 
         <Box 
           sx={{ 
-            mt: 2, 
-            p: 1, 
-            borderRadius: 1, 
+            mt: 3, 
+            p: 2, 
+            borderRadius: 2, 
             bgcolor: 'rgba(255, 183, 77, 0.1)', 
             border: '1px solid rgba(255, 183, 77, 0.2)' 
           }}
