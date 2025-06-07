@@ -4,6 +4,7 @@ import { format } from 'date-fns';
 import { ElectricalDataType } from '../../types';
 import ValueDisplay from '../ui/ValueDisplay';
 import GaugeChart from '../charts/GaugeChart';
+import StatusIndicator from '../ui/StatusIndicator';
 
 interface ElectricalSectionProps {
   data: ElectricalDataType;
@@ -71,46 +72,88 @@ const ElectricalSection = ({ data, loading, thresholds }: ElectricalSectionProps
               ) : (
                 <Grid container spacing={1} sx={{ mt: 1 }}>
                   <Grid item xs={12} md={4}>
-                    <GaugeChart
-                      value={data.phase_r}
-                      title="Phase R"
-                      min={180}
-                      max={260}
-                      unit="V"
-                      color={getStatusColor(getVoltageStatus(data.phase_r))}
-                      thresholds={{
-                        danger: [thresholds.critical.low, thresholds.critical.high],
-                        warning: [thresholds.warning.low, thresholds.warning.high]
-                      }}
-                    />
+                    <Box sx={{ position: 'relative' }}>
+                      <GaugeChart
+                        value={data.phase_r}
+                        title="Phase R"
+                        min={180}
+                        max={260}
+                        unit="V"
+                        color={getStatusColor(getVoltageStatus(data.phase_r))}
+                        thresholds={{
+                          danger: [thresholds.critical.low, thresholds.critical.high],
+                          warning: [thresholds.warning.low, thresholds.warning.high]
+                        }}
+                      />
+                      {/* Status indicator below Phase R */}
+                      <Box sx={{ 
+                        display: 'flex', 
+                        justifyContent: 'center', 
+                        mt: 1 
+                      }}>
+                        <StatusIndicator 
+                          status={getVoltageStatus(data.phase_r)} 
+                          label={getVoltageStatus(data.phase_r) === 'normal' ? 'NORMAL' : getVoltageStatus(data.phase_r) === 'warning' ? 'WARNING' : 'CRITICAL'}
+                          glowing={getVoltageStatus(data.phase_r) === 'normal'}
+                        />
+                      </Box>
+                    </Box>
                   </Grid>
                   <Grid item xs={12} md={4}>
-                    <GaugeChart
-                      value={data.phase_s}
-                      title="Phase S"
-                      min={180}
-                      max={260}
-                      unit="V"
-                      color={getStatusColor(getVoltageStatus(data.phase_s))}
-                      thresholds={{
-                        danger: [thresholds.critical.low, thresholds.critical.high],
-                        warning: [thresholds.warning.low, thresholds.warning.high]
-                      }}
-                    />
+                    <Box sx={{ position: 'relative' }}>
+                      <GaugeChart
+                        value={data.phase_s}
+                        title="Phase S"
+                        min={180}
+                        max={260}
+                        unit="V"
+                        color={getStatusColor(getVoltageStatus(data.phase_s))}
+                        thresholds={{
+                          danger: [thresholds.critical.low, thresholds.critical.high],
+                          warning: [thresholds.warning.low, thresholds.warning.high]
+                        }}
+                      />
+                      {/* Status indicator below Phase S */}
+                      <Box sx={{ 
+                        display: 'flex', 
+                        justifyContent: 'center', 
+                        mt: 1 
+                      }}>
+                        <StatusIndicator 
+                          status={getVoltageStatus(data.phase_s)} 
+                          label={getVoltageStatus(data.phase_s) === 'normal' ? 'NORMAL' : getVoltageStatus(data.phase_s) === 'warning' ? 'WARNING' : 'CRITICAL'}
+                          glowing={getVoltageStatus(data.phase_s) === 'normal'}
+                        />
+                      </Box>
+                    </Box>
                   </Grid>
                   <Grid item xs={12} md={4}>
-                    <GaugeChart
-                      value={data.phase_t}
-                      title="Phase T"
-                      min={180}
-                      max={260}
-                      unit="V"
-                      color={getStatusColor(getVoltageStatus(data.phase_t))}
-                      thresholds={{
-                        danger: [thresholds.critical.low, thresholds.critical.high],
-                        warning: [thresholds.warning.low, thresholds.warning.high]
-                      }}
-                    />
+                    <Box sx={{ position: 'relative' }}>
+                      <GaugeChart
+                        value={data.phase_t}
+                        title="Phase T"
+                        min={180}
+                        max={260}
+                        unit="V"
+                        color={getStatusColor(getVoltageStatus(data.phase_t))}
+                        thresholds={{
+                          danger: [thresholds.critical.low, thresholds.critical.high],
+                          warning: [thresholds.warning.low, thresholds.warning.high]
+                        }}
+                      />
+                      {/* Status indicator below Phase T */}
+                      <Box sx={{ 
+                        display: 'flex', 
+                        justifyContent: 'center', 
+                        mt: 1 
+                      }}>
+                        <StatusIndicator 
+                          status={getVoltageStatus(data.phase_t)} 
+                          label={getVoltageStatus(data.phase_t) === 'normal' ? 'NORMAL' : getVoltageStatus(data.phase_t) === 'warning' ? 'WARNING' : 'CRITICAL'}
+                          glowing={getVoltageStatus(data.phase_t) === 'normal'}
+                        />
+                      </Box>
+                    </Box>
                   </Grid>
                 </Grid>
               )}
