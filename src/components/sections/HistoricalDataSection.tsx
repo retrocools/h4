@@ -200,7 +200,7 @@ const HistoricalDataSection = ({ data, loading, isMobile }: HistoricalDataSectio
   // Memoize main content for better performance
   const chartContent = useMemo(() => {
     if (loading) {
-      return <Skeleton variant="rectangular" height={350} width="100%" />;
+      return <Skeleton variant="rectangular\" height={350} width="100%" />;
     }
 
     return (
