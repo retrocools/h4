@@ -23,10 +23,11 @@ interface DataPoint {
 interface TemperatureChartProps {
   nocData: DataPoint[];
   upsData: DataPoint[];
+  datacenterData: DataPoint[];
   timeRange: string;
 }
 
-const TemperatureChart = ({ nocData, upsData, timeRange }: TemperatureChartProps) => {
+const TemperatureChart = ({ nocData, upsData, datacenterData, timeRange }: TemperatureChartProps) => {
   const [zoomDomain, setZoomDomain] = useState<{ left?: string; right?: string } | null>(null);
   const [refAreaLeft, setRefAreaLeft] = useState<string>('');
   const [refAreaRight, setRefAreaRight] = useState<string>('');
@@ -37,6 +38,7 @@ const TemperatureChart = ({ nocData, upsData, timeRange }: TemperatureChartProps
     timestamp: item.timestamp,
     nocTemperature: item.value,
     upsTemperature: upsData[index]?.value || null,
+    datacenterTemperature: datacenterData[index]?.value || null,
   }));
 
   // Format x-axis ticks based on time range
@@ -237,6 +239,15 @@ const TemperatureChart = ({ nocData, upsData, timeRange }: TemperatureChartProps
             dataKey="upsTemperature" 
             name="UPS Temperature" 
             stroke="#00b0ff" 
+            dot={false} 
+            activeDot={{ r: 6 }}
+            strokeWidth={2}
+          />
+          <Line 
+            type="monotone" 
+            dataKey="datacenterTemperature" 
+            name="Data Center Temperature" 
+            stroke="#ff9800" 
             dot={false} 
             activeDot={{ r: 6 }}
             strokeWidth={2}

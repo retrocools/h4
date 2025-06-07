@@ -215,6 +215,7 @@ const HistoricalDataSection = ({ data, loading, isMobile }: HistoricalDataSectio
             <TemperatureChart 
               nocData={historicalData.temperature?.noc || []} 
               upsData={historicalData.temperature?.ups || []} 
+              datacenterData={historicalData.temperature?.datacenter || []}
               timeRange={timeRange}
             />
           )}
@@ -223,6 +224,7 @@ const HistoricalDataSection = ({ data, loading, isMobile }: HistoricalDataSectio
             <HumidityChart 
               nocData={historicalData.humidity?.noc || []} 
               upsData={historicalData.humidity?.ups || []} 
+              datacenterData={historicalData.humidity?.datacenter || []}
               timeRange={timeRange}
             />
           )}
@@ -423,7 +425,7 @@ const HistoricalDataSection = ({ data, loading, isMobile }: HistoricalDataSectio
         <Fade in timeout={800}>
           <Box 
             sx={{ 
-              mt: 3, 
+              mt: 2, 
               p: 2,
               borderRadius: 2,
               bgcolor: 'rgba(63, 136, 242, 0.08)', 

@@ -23,10 +23,11 @@ interface DataPoint {
 interface HumidityChartProps {
   nocData: DataPoint[];
   upsData: DataPoint[];
+  datacenterData: DataPoint[];
   timeRange: string;
 }
 
-const HumidityChart = ({ nocData, upsData, timeRange }: HumidityChartProps) => {
+const HumidityChart = ({ nocData, upsData, datacenterData, timeRange }: HumidityChartProps) => {
   const [zoomDomain, setZoomDomain] = useState<{ left?: string; right?: string } | null>(null);
   const [refAreaLeft, setRefAreaLeft] = useState<string>('');
   const [refAreaRight, setRefAreaRight] = useState<string>('');
@@ -37,6 +38,7 @@ const HumidityChart = ({ nocData, upsData, timeRange }: HumidityChartProps) => {
     timestamp: item.timestamp,
     nocHumidity: item.value,
     upsHumidity: upsData[index]?.value || null,
+    datacenterHumidity: datacenterData[index]?.value || null,
   }));
 
   // Format x-axis ticks based on time range
@@ -237,6 +239,15 @@ const HumidityChart = ({ nocData, upsData, timeRange }: HumidityChartProps) => {
             dataKey="upsHumidity" 
             name="UPS Humidity" 
             stroke="#64b5f6" 
+            dot={false} 
+            activeDot={{ r: 6 }}
+            strokeWidth={2}
+          />
+          <Line 
+            type="monotone" 
+            dataKey="datacenterHumidity" 
+            name="Data Center Humidity" 
+            stroke="#81c784" 
             dot={false} 
             activeDot={{ r: 6 }}
             strokeWidth={2}

@@ -78,11 +78,11 @@ const ElectricalSection = ({ data, loading, thresholds }: ElectricalSectionProps
                         Phase R
                       </Typography>
                       
-                      {/* Status indicator positioned between title and gauge */}
+                      {/* Status indicator positioned directly below title with minimal spacing */}
                       <Box sx={{ 
                         display: 'flex', 
                         justifyContent: 'center', 
-                        mb: 2
+                        mb: 1
                       }}>
                         <StatusIndicator 
                           status={getVoltageStatus(data.phase_r)} 
@@ -113,11 +113,11 @@ const ElectricalSection = ({ data, loading, thresholds }: ElectricalSectionProps
                         Phase S
                       </Typography>
                       
-                      {/* Status indicator positioned between title and gauge */}
+                      {/* Status indicator positioned directly below title with minimal spacing */}
                       <Box sx={{ 
                         display: 'flex', 
                         justifyContent: 'center', 
-                        mb: 2
+                        mb: 1
                       }}>
                         <StatusIndicator 
                           status={getVoltageStatus(data.phase_s)} 
@@ -148,11 +148,11 @@ const ElectricalSection = ({ data, loading, thresholds }: ElectricalSectionProps
                         Phase T
                       </Typography>
                       
-                      {/* Status indicator positioned between title and gauge */}
+                      {/* Status indicator positioned directly below title with minimal spacing */}
                       <Box sx={{ 
                         display: 'flex', 
                         justifyContent: 'center', 
-                        mb: 2
+                        mb: 1
                       }}>
                         <StatusIndicator 
                           status={getVoltageStatus(data.phase_t)} 

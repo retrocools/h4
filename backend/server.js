@@ -172,6 +172,13 @@ const fetchHistoricalData = async (timeRange) => {
       ORDER BY waktu ASC
     `, [startDateStr]);
 
+    const [datacenterTemp] = await pool.query(`
+      SELECT waktu as timestamp, suhu as value
+      FROM sensor_data2
+      WHERE waktu >= ?
+      ORDER BY waktu ASC
+    `, [startDateStr]);
+
     // Fetch humidity data
     const [nocHum] = await pool.query(`
       SELECT waktu as timestamp, kelembapan as value
@@ -183,6 +190,13 @@ const fetchHistoricalData = async (timeRange) => {
     const [upsHum] = await pool.query(`
       SELECT waktu as timestamp, kelembapan as value
       FROM sensor_data1
+      WHERE waktu >= ?
+      ORDER BY waktu ASC
+    `, [startDateStr]);
+
+    const [datacenterHum] = await pool.query(`
+      SELECT waktu as timestamp, kelembapan as value
+      FROM sensor_data2
       WHERE waktu >= ?
       ORDER BY waktu ASC
     `, [startDateStr]);
@@ -202,11 +216,13 @@ const fetchHistoricalData = async (timeRange) => {
     return {
       temperature: {
         noc: nocTemp,
-        ups: upsTemp
+        ups: upsTemp,
+        datacenter: datacenterTemp
       },
       humidity: {
         noc: nocHum,
-        ups: upsHum
+        ups: upsHum,
+        datacenter: datacenterHum
       },
       electrical
     };
@@ -289,13 +305,14 @@ app.get('/api/export/:type', authenticateToken, async (req, res) => {
           SELECT 
             waktu as timestamp,
             suhu as noc_temperature,
-            (SELECT suhu FROM sensor_data1 s2 WHERE s2.waktu <= s1.waktu ORDER BY waktu DESC LIMIT 1) as ups_temperature
+            (SELECT suhu FROM sensor_data1 s2 WHERE s2.waktu <= s1.waktu ORDER BY waktu DESC LIMIT 1) as ups_temperature,
+            (SELECT suhu FROM sensor_data2 s3 WHERE s3.waktu <= s1.waktu ORDER BY waktu DESC LIMIT 1) as datacenter_temperature
           FROM sensor_data s1
           WHERE waktu >= ?
           ORDER BY waktu ASC
         `, [startDateStr]);
         
-        headers = 'Timestamp,NOC Temperature (°C),UPS Temperature (°C)\n';
+        headers = 'Timestamp,NOC Temperature (°C),UPS Temperature (°C),Data Center Temperature (°C)\n';
         filename = 'temperature_data';
         break;
         
@@ -304,13 +321,14 @@ app.get('/api/export/:type', authenticateToken, async (req, res) => {
           SELECT 
             waktu as timestamp,
             kelembapan as noc_humidity,
-            (SELECT kelembapan FROM sensor_data1 s2 WHERE s2.waktu <= s1.waktu ORDER BY waktu DESC LIMIT 1) as ups_humidity
+            (SELECT kelembapan FROM sensor_data1 s2 WHERE s2.waktu <= s1.waktu ORDER BY waktu DESC LIMIT 1) as ups_humidity,
+            (SELECT kelembapan FROM sensor_data2 s3 WHERE s3.waktu <= s1.waktu ORDER BY waktu DESC LIMIT 1) as datacenter_humidity
           FROM sensor_data s1
           WHERE waktu >= ?
           ORDER BY waktu ASC
         `, [startDateStr]);
         
-        headers = 'Timestamp,NOC Humidity (%),UPS Humidity (%)\n';
+        headers = 'Timestamp,NOC Humidity (%),UPS Humidity (%),Data Center Humidity (%)\n';
         filename = 'humidity_data';
         break;
         
@@ -398,10 +416,12 @@ async function fetchAndEmitData() {
     if (nocData.length > 0) {
       io.emit('noc_temperature', { 
         suhu: parseFloat(nocData[0].suhu),
+        kelembapan: parseFloat(nocData[0].kelembapan),
         waktu: nocData[0].waktu
       });
       
       io.emit('noc_humidity', { 
+        suhu: parseFloat(nocData[0].suhu),
         kelembapan: parseFloat(nocData[0].kelembapan),
         waktu: nocData[0].waktu
       });
@@ -412,12 +432,30 @@ async function fetchAndEmitData() {
     if (upsData.length > 0) {
       io.emit('ups_temperature', { 
         suhu: parseFloat(upsData[0].suhu),
+        kelembapan: parseFloat(upsData[0].kelembapan),
         waktu: upsData[0].waktu
       });
       
       io.emit('ups_humidity', { 
+        suhu: parseFloat(upsData[0].suhu),
         kelembapan: parseFloat(upsData[0].kelembapan),
         waktu: upsData[0].waktu
+      });
+    }
+
+    // Fetch Data Center temperature and humidity data from sensor_data2
+    const [datacenterData] = await pool.query('SELECT * FROM sensor_data2 ORDER BY id DESC LIMIT 1');
+    if (datacenterData.length > 0) {
+      io.emit('datacenter_temperature', { 
+        suhu: parseFloat(datacenterData[0].suhu),
+        kelembapan: parseFloat(datacenterData[0].kelembapan),
+        waktu: datacenterData[0].waktu
+      });
+      
+      io.emit('datacenter_humidity', { 
+        suhu: parseFloat(datacenterData[0].suhu),
+        kelembapan: parseFloat(datacenterData[0].kelembapan),
+        waktu: datacenterData[0].waktu
       });
     }
 
