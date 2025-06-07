@@ -21,8 +21,9 @@ import {
   ListItemText,
   Fade,
   Zoom,
+  Chip,
 } from '@mui/material';
-import { BarChart3, Calendar, FileSpreadsheet, Download, Table, TrendingUp } from 'lucide-react';
+import { BarChart3, FileSpreadsheet, Table, TrendingUp, Thermometer, Droplets, Zap } from 'lucide-react';
 import { DataType } from '../../types';
 import TemperatureChart from '../charts/TemperatureChart';
 import HumidityChart from '../charts/HumidityChart';
@@ -57,7 +58,7 @@ const HistoricalDataSection = ({ data, loading, isMobile }: HistoricalDataSectio
       setLastUpdate(new Date());
     });
 
-    // Set up polling interval based on timeRange - optimized intervals
+    // Optimized polling intervals for smoother performance
     const interval = setInterval(() => {
       socket.emit('request_historical_data', { timeRange });
     }, timeRange === 'realtime' ? 30000 : // 30 seconds for realtime
@@ -159,16 +160,16 @@ const HistoricalDataSection = ({ data, loading, isMobile }: HistoricalDataSectio
     }
   };
 
-  const getTabLabel = (index: number) => {
+  const getTabConfig = (index: number) => {
     switch (index) {
       case 0:
-        return 'Temperature Data';
+        return { label: 'Temperature', icon: <Thermometer size={16} />, color: '#3f88f2' };
       case 1:
-        return 'Humidity Data';
+        return { label: 'Humidity', icon: <Droplets size={16} />, color: '#29b6f6' };
       case 2:
-        return 'Electrical Data';
+        return { label: 'Electrical', icon: <Zap size={16} />, color: '#ffb74d' };
       default:
-        return '';
+        return { label: '', icon: null, color: '#fff' };
     }
   };
 
@@ -185,7 +186,7 @@ const HistoricalDataSection = ({ data, loading, isMobile }: HistoricalDataSectio
   const getTimeRangeLabel = () => {
     switch (timeRange) {
       case 'realtime':
-        return 'Real-time (30s intervals)';
+        return 'Real-time (30s refresh)';
       case '24h':
         return 'Last 24 Hours';
       case '7d':
@@ -200,11 +201,15 @@ const HistoricalDataSection = ({ data, loading, isMobile }: HistoricalDataSectio
   // Memoize main content for better performance
   const chartContent = useMemo(() => {
     if (loading) {
-      return <Skeleton variant="rectangular\" height={350} width="100%" />;
+      return (
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 350 }}>
+          <CircularProgress size={60} thickness={4} />
+        </Box>
+      );
     }
 
     return (
-      <Fade in timeout={500}>
+      <Fade in timeout={600}>
         <Box sx={{ mt: 1 }}>
           {activeTab === 0 && (
             <TemperatureChart 
@@ -244,34 +249,45 @@ const HistoricalDataSection = ({ data, loading, isMobile }: HistoricalDataSectio
     >
       <CardHeader 
         title={
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <TrendingUp size={24} color="#3f88f2" />
-            <Typography variant="h5" sx={{ ml: 1, fontWeight: 600 }}>
+            <Typography variant="h5" sx={{ fontWeight: 600 }}>
               Historical Data Analytics
             </Typography>
+            <Chip 
+              label={`${getDataPointCount().toLocaleString()} samples`}
+              size="small"
+              sx={{ 
+                bgcolor: 'rgba(63, 136, 242, 0.1)',
+                color: 'primary.light',
+                border: '1px solid rgba(63, 136, 242, 0.3)'
+              }}
+            />
           </Box>
         } 
         action={
-          <Stack direction="row" spacing={2} alignItems="center">
+          <Stack direction={isMobile ? "column" : "row"} spacing={2} alignItems="center">
             <Zoom in timeout={300}>
               <Button
                 variant="outlined"
                 onClick={handleExportClick}
-                startIcon={exportLoading ? <CircularProgress size={20} /> : <FileSpreadsheet size={20} />}
+                startIcon={exportLoading ? <CircularProgress size={18} /> : <FileSpreadsheet size={18} />}
                 disabled={exportLoading}
+                size="small"
                 sx={{
                   borderColor: 'rgba(255, 255, 255, 0.2)',
                   color: 'text.primary',
                   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  minWidth: 120,
                   '&:hover': {
                     borderColor: 'primary.main',
                     backgroundColor: 'rgba(63, 136, 242, 0.1)',
-                    transform: 'translateY(-2px)',
+                    transform: 'translateY(-1px)',
                     boxShadow: '0 4px 12px rgba(63, 136, 242, 0.3)',
                   }
                 }}
               >
-                Export Data
+                Export
               </Button>
             </Zoom>
             <Menu
@@ -282,7 +298,7 @@ const HistoricalDataSection = ({ data, loading, isMobile }: HistoricalDataSectio
               PaperProps={{
                 sx: {
                   mt: 1.5,
-                  minWidth: 180,
+                  minWidth: 160,
                   backdropFilter: 'blur(20px)',
                   backgroundColor: 'rgba(26, 26, 46, 0.95)',
                   border: '1px solid rgba(255, 255, 255, 0.1)',
@@ -301,9 +317,9 @@ const HistoricalDataSection = ({ data, loading, isMobile }: HistoricalDataSectio
                 }}
               >
                 <ListItemIcon>
-                  <Table size={18} />
+                  <Table size={16} />
                 </ListItemIcon>
-                <ListItemText>Export as CSV</ListItemText>
+                <ListItemText>Export CSV</ListItemText>
               </MenuItem>
             </Menu>
             <ToggleButtonGroup
@@ -319,15 +335,15 @@ const HistoricalDataSection = ({ data, loading, isMobile }: HistoricalDataSectio
                 '.MuiToggleButton-root': {
                   color: 'text.secondary',
                   border: 'none',
-                  px: 2,
-                  py: 1,
-                  fontSize: '0.875rem',
+                  px: isMobile ? 1.5 : 2,
+                  py: 0.5,
+                  fontSize: '0.75rem',
                   fontWeight: 500,
                   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                   '&.Mui-selected': {
                     color: 'primary.main',
                     backgroundColor: 'rgba(63, 136, 242, 0.15)',
-                    transform: 'scale(1.05)',
+                    transform: 'scale(1.02)',
                     boxShadow: '0 2px 8px rgba(63, 136, 242, 0.3)',
                   },
                   '&:hover': {
@@ -351,10 +367,10 @@ const HistoricalDataSection = ({ data, loading, isMobile }: HistoricalDataSectio
             </ToggleButtonGroup>
           </Stack>
         }
-        sx={{ pb: 0 }}
+        sx={{ pb: 1 }}
       />
       
-      <Box sx={{ borderBottom: 1, borderColor: 'divider', px: 2 }}>
+      <Box sx={{ borderBottom: 1, borderColor: 'rgba(255, 255, 255, 0.1)', px: 2 }}>
         <Tabs 
           value={activeTab} 
           onChange={handleTabChange} 
@@ -382,25 +398,26 @@ const HistoricalDataSection = ({ data, loading, isMobile }: HistoricalDataSectio
             }
           }}
         >
-          <Tab 
-            label="Temperature" 
-            icon={<Calendar size={16} />} 
-            iconPosition="start"
-          />
-          <Tab 
-            label="Humidity" 
-            icon={<Calendar size={16} />} 
-            iconPosition="start"
-          />
-          <Tab 
-            label="Electrical" 
-            icon={<Calendar size={16} />} 
-            iconPosition="start"
-          />
+          {[0, 1, 2].map((index) => {
+            const config = getTabConfig(index);
+            return (
+              <Tab 
+                key={index}
+                label={config.label}
+                icon={config.icon}
+                iconPosition="start"
+                sx={{
+                  '&.Mui-selected': {
+                    color: config.color,
+                  }
+                }}
+              />
+            );
+          })}
         </Tabs>
       </Box>
       
-      <CardContent>
+      <CardContent sx={{ pt: 2 }}>
         {chartContent}
         
         <Fade in timeout={800}>
@@ -411,37 +428,35 @@ const HistoricalDataSection = ({ data, loading, isMobile }: HistoricalDataSectio
               borderRadius: 2,
               bgcolor: 'rgba(63, 136, 242, 0.08)', 
               border: '1px solid rgba(63, 136, 242, 0.2)',
-              display: 'flex',
-              flexDirection: isMobile ? 'column' : 'row',
-              justifyContent: 'space-between',
-              gap: 2,
               backdropFilter: 'blur(10px)',
             }}
           >
-            <Box>
-              <Typography variant="subtitle2" color="primary.light" sx={{ mb: 0.5, fontWeight: 600 }}>
-                Current View
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {getTabLabel(activeTab)} • {getTimeRangeLabel()}
-              </Typography>
-            </Box>
-            <Box>
-              <Typography variant="subtitle2" color="primary.light" sx={{ mb: 0.5, fontWeight: 600 }}>
-                Data Points
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {getDataPointCount().toLocaleString()} samples
-              </Typography>
-            </Box>
-            <Box>
-              <Typography variant="subtitle2" color="primary.light" sx={{ mb: 0.5, fontWeight: 600 }}>
-                Last Updated
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {format(lastUpdate, 'dd MMM yyyy HH:mm:ss')}
-              </Typography>
-            </Box>
+            <Grid container spacing={2} alignItems="center">
+              <Grid item xs={12} sm={4}>
+                <Typography variant="subtitle2" color="primary.light" sx={{ mb: 0.5, fontWeight: 600 }}>
+                  Current View
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {getTabConfig(activeTab).label} • {getTimeRangeLabel()}
+                </Typography>
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <Typography variant="subtitle2" color="primary.light" sx={{ mb: 0.5, fontWeight: 600 }}>
+                  Data Points
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {getDataPointCount().toLocaleString()} samples
+                </Typography>
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <Typography variant="subtitle2" color="primary.light" sx={{ mb: 0.5, fontWeight: 600 }}>
+                  Last Updated
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {format(lastUpdate, 'HH:mm:ss')}
+                </Typography>
+              </Grid>
+            </Grid>
           </Box>
         </Fade>
       </CardContent>

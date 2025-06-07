@@ -57,10 +57,12 @@ export interface HistoricalDataType {
   temperature?: {
     noc: Array<{ timestamp: string; value: number }>;
     ups: Array<{ timestamp: string; value: number }>;
+    datacenter: Array<{ timestamp: string; value: number }>;
   };
   humidity?: {
     noc: Array<{ timestamp: string; value: number }>;
     ups: Array<{ timestamp: string; value: number }>;
+    datacenter: Array<{ timestamp: string; value: number }>;
   };
   electrical?: Array<{
     timestamp: string;
@@ -74,8 +76,10 @@ export interface HistoricalDataType {
 export interface DataType {
   nocTemperature: TemperatureHumidityDataType;
   upsTemperature: TemperatureHumidityDataType;
+  datacenterTemperature: TemperatureHumidityDataType;
   nocHumidity: TemperatureHumidityDataType;
   upsHumidity: TemperatureHumidityDataType;
+  datacenterHumidity: TemperatureHumidityDataType;
   fireSmoke: FireSmokeDataType;
   electrical: ElectricalDataType;
   historical: HistoricalDataType;

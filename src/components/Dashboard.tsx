@@ -86,6 +86,11 @@ const Dashboard = ({ addAlert, isMobile }: DashboardProps) => {
       checkTemperatureThresholds('UPS temperature', newData.suhu);
     };
 
+    const handleDatacenterTemperature = (newData: any) => {
+      setData(prev => ({ ...prev, datacenterTemperature: newData }));
+      checkTemperatureThresholds('Data Center temperature', newData.suhu);
+    };
+
     const handleNocHumidity = (newData: any) => {
       setData(prev => ({ ...prev, nocHumidity: newData }));
       checkHumidityThresholds('NOC humidity', newData.kelembapan);
@@ -94,6 +99,11 @@ const Dashboard = ({ addAlert, isMobile }: DashboardProps) => {
     const handleUpsHumidity = (newData: any) => {
       setData(prev => ({ ...prev, upsHumidity: newData }));
       checkHumidityThresholds('UPS humidity', newData.kelembapan);
+    };
+
+    const handleDatacenterHumidity = (newData: any) => {
+      setData(prev => ({ ...prev, datacenterHumidity: newData }));
+      checkHumidityThresholds('Data Center humidity', newData.kelembapan);
     };
 
     const handleElectricalData = (newData: any) => {
@@ -120,8 +130,10 @@ const Dashboard = ({ addAlert, isMobile }: DashboardProps) => {
     // Socket event listeners
     socket.on('noc_temperature', handleNocTemperature);
     socket.on('ups_temperature', handleUpsTemperature);
+    socket.on('datacenter_temperature', handleDatacenterTemperature);
     socket.on('noc_humidity', handleNocHumidity);
     socket.on('ups_humidity', handleUpsHumidity);
+    socket.on('datacenter_humidity', handleDatacenterHumidity);
     socket.on('electrical_data', handleElectricalData);
     socket.on('fire_smoke_data', handleFireSmokeData);
     socket.on('historical_data', handleHistoricalData);
@@ -129,8 +141,10 @@ const Dashboard = ({ addAlert, isMobile }: DashboardProps) => {
     return () => {
       socket.off('noc_temperature', handleNocTemperature);
       socket.off('ups_temperature', handleUpsTemperature);
+      socket.off('datacenter_temperature', handleDatacenterTemperature);
       socket.off('noc_humidity', handleNocHumidity);
       socket.off('ups_humidity', handleUpsHumidity);
+      socket.off('datacenter_humidity', handleDatacenterHumidity);
       socket.off('electrical_data', handleElectricalData);
       socket.off('fire_smoke_data', handleFireSmokeData);
       socket.off('historical_data', handleHistoricalData);

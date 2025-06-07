@@ -64,6 +64,12 @@ export const mockedData: DataType = {
     kelembapan: 58.5,
     waktu: new Date().toISOString(),
   },
+  datacenterTemperature: {
+    id: 1,
+    suhu: 22.3,
+    kelembapan: 52.1,
+    waktu: new Date().toISOString(),
+  },
   nocHumidity: {
     id: 1,
     suhu: 24.5,
@@ -74,6 +80,12 @@ export const mockedData: DataType = {
     id: 1,
     suhu: 26.8,
     kelembapan: 58.5,
+    waktu: new Date().toISOString(),
+  },
+  datacenterHumidity: {
+    id: 1,
+    suhu: 22.3,
+    kelembapan: 52.1,
     waktu: new Date().toISOString(),
   },
   fireSmoke: {
@@ -122,10 +134,12 @@ export const mockedData: DataType = {
     temperature: {
       noc: generateHistoricalPoints(1, 24.5, 2),
       ups: generateHistoricalPoints(1, 26.8, 3),
+      datacenter: generateHistoricalPoints(1, 22.3, 2.5),
     },
     humidity: {
       noc: generateHistoricalPoints(1, 55.2, 5),
       ups: generateHistoricalPoints(1, 58.5, 6),
+      datacenter: generateHistoricalPoints(1, 52.1, 4),
     },
     electrical: generateElectricalHistory(1),
   },

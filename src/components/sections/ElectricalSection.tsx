@@ -68,14 +68,33 @@ const ElectricalSection = ({ data, loading, thresholds }: ElectricalSectionProps
                 Phase Voltage Monitoring
               </Typography>
               {loading ? (
-                <Skeleton variant="rectangular" height={250} width="100%" />
+                <Skeleton variant="rectangular" height={280} width="100%" />
               ) : (
                 <Grid container spacing={1} sx={{ mt: 1 }}>
                   <Grid item xs={12} md={4}>
-                    <Box sx={{ position: 'relative' }}>
+                    <Box sx={{ position: 'relative', textAlign: 'center' }}>
+                      {/* Phase Title */}
+                      <Typography variant="h6" sx={{ mb: 1, fontWeight: 600, color: '#ff5252' }}>
+                        Phase R
+                      </Typography>
+                      
+                      {/* Status indicator positioned between title and gauge */}
+                      <Box sx={{ 
+                        display: 'flex', 
+                        justifyContent: 'center', 
+                        mb: 2
+                      }}>
+                        <StatusIndicator 
+                          status={getVoltageStatus(data.phase_r)} 
+                          label={getVoltageStatus(data.phase_r) === 'normal' ? 'NORMAL' : getVoltageStatus(data.phase_r) === 'warning' ? 'WARNING' : 'CRITICAL'}
+                          glowing={getVoltageStatus(data.phase_r) === 'normal'}
+                        />
+                      </Box>
+                      
+                      {/* Gauge Chart */}
                       <GaugeChart
                         value={data.phase_r}
-                        title="Phase R"
+                        title=""
                         min={180}
                         max={260}
                         unit="V"
@@ -85,25 +104,32 @@ const ElectricalSection = ({ data, loading, thresholds }: ElectricalSectionProps
                           warning: [thresholds.warning.low, thresholds.warning.high]
                         }}
                       />
-                      {/* Status indicator below Phase R */}
-                      <Box sx={{ 
-                        display: 'flex', 
-                        justifyContent: 'center', 
-                        mt: 1 
-                      }}>
-                        <StatusIndicator 
-                          status={getVoltageStatus(data.phase_r)} 
-                          label={getVoltageStatus(data.phase_r) === 'normal' ? 'NORMAL' : getVoltageStatus(data.phase_r) === 'warning' ? 'WARNING' : 'CRITICAL'}
-                          glowing={getVoltageStatus(data.phase_r) === 'normal'}
-                        />
-                      </Box>
                     </Box>
                   </Grid>
                   <Grid item xs={12} md={4}>
-                    <Box sx={{ position: 'relative' }}>
+                    <Box sx={{ position: 'relative', textAlign: 'center' }}>
+                      {/* Phase Title */}
+                      <Typography variant="h6" sx={{ mb: 1, fontWeight: 600, color: '#ffb74d' }}>
+                        Phase S
+                      </Typography>
+                      
+                      {/* Status indicator positioned between title and gauge */}
+                      <Box sx={{ 
+                        display: 'flex', 
+                        justifyContent: 'center', 
+                        mb: 2
+                      }}>
+                        <StatusIndicator 
+                          status={getVoltageStatus(data.phase_s)} 
+                          label={getVoltageStatus(data.phase_s) === 'normal' ? 'NORMAL' : getVoltageStatus(data.phase_s) === 'warning' ? 'WARNING' : 'CRITICAL'}
+                          glowing={getVoltageStatus(data.phase_s) === 'normal'}
+                        />
+                      </Box>
+                      
+                      {/* Gauge Chart */}
                       <GaugeChart
                         value={data.phase_s}
-                        title="Phase S"
+                        title=""
                         min={180}
                         max={260}
                         unit="V"
@@ -113,25 +139,32 @@ const ElectricalSection = ({ data, loading, thresholds }: ElectricalSectionProps
                           warning: [thresholds.warning.low, thresholds.warning.high]
                         }}
                       />
-                      {/* Status indicator below Phase S */}
-                      <Box sx={{ 
-                        display: 'flex', 
-                        justifyContent: 'center', 
-                        mt: 1 
-                      }}>
-                        <StatusIndicator 
-                          status={getVoltageStatus(data.phase_s)} 
-                          label={getVoltageStatus(data.phase_s) === 'normal' ? 'NORMAL' : getVoltageStatus(data.phase_s) === 'warning' ? 'WARNING' : 'CRITICAL'}
-                          glowing={getVoltageStatus(data.phase_s) === 'normal'}
-                        />
-                      </Box>
                     </Box>
                   </Grid>
                   <Grid item xs={12} md={4}>
-                    <Box sx={{ position: 'relative' }}>
+                    <Box sx={{ position: 'relative', textAlign: 'center' }}>
+                      {/* Phase Title */}
+                      <Typography variant="h6" sx={{ mb: 1, fontWeight: 600, color: '#4caf50' }}>
+                        Phase T
+                      </Typography>
+                      
+                      {/* Status indicator positioned between title and gauge */}
+                      <Box sx={{ 
+                        display: 'flex', 
+                        justifyContent: 'center', 
+                        mb: 2
+                      }}>
+                        <StatusIndicator 
+                          status={getVoltageStatus(data.phase_t)} 
+                          label={getVoltageStatus(data.phase_t) === 'normal' ? 'NORMAL' : getVoltageStatus(data.phase_t) === 'warning' ? 'WARNING' : 'CRITICAL'}
+                          glowing={getVoltageStatus(data.phase_t) === 'normal'}
+                        />
+                      </Box>
+                      
+                      {/* Gauge Chart */}
                       <GaugeChart
                         value={data.phase_t}
-                        title="Phase T"
+                        title=""
                         min={180}
                         max={260}
                         unit="V"
@@ -141,18 +174,6 @@ const ElectricalSection = ({ data, loading, thresholds }: ElectricalSectionProps
                           warning: [thresholds.warning.low, thresholds.warning.high]
                         }}
                       />
-                      {/* Status indicator below Phase T */}
-                      <Box sx={{ 
-                        display: 'flex', 
-                        justifyContent: 'center', 
-                        mt: 1 
-                      }}>
-                        <StatusIndicator 
-                          status={getVoltageStatus(data.phase_t)} 
-                          label={getVoltageStatus(data.phase_t) === 'normal' ? 'NORMAL' : getVoltageStatus(data.phase_t) === 'warning' ? 'WARNING' : 'CRITICAL'}
-                          glowing={getVoltageStatus(data.phase_t) === 'normal'}
-                        />
-                      </Box>
                     </Box>
                   </Grid>
                 </Grid>
@@ -166,7 +187,7 @@ const ElectricalSection = ({ data, loading, thresholds }: ElectricalSectionProps
               Power Monitoring
             </Typography>
             {loading ? (
-              <Skeleton variant="rectangular" height={250} width="100%" />
+              <Skeleton variant="rectangular" height={280} width="100%" />
             ) : (
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
