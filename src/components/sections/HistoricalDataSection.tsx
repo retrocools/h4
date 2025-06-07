@@ -210,7 +210,7 @@ const HistoricalDataSection = ({ data, loading, isMobile }: HistoricalDataSectio
 
     return (
       <Fade in timeout={600}>
-        <Box sx={{ mt: 1 }}>
+        <Box sx={{ mt: 1, position: 'relative' }}>
           {activeTab === 0 && (
             <TemperatureChart 
               nocData={historicalData.temperature?.noc || []} 
@@ -235,10 +235,68 @@ const HistoricalDataSection = ({ data, loading, isMobile }: HistoricalDataSectio
               timeRange={timeRange}
             />
           )}
+          
+          {/* Integrated info box inside chart area */}
+          <Box 
+            sx={{ 
+              position: 'absolute',
+              bottom: 10,
+              left: 10,
+              right: 10,
+              p: 2,
+              borderRadius: 2,
+              bgcolor: 'rgba(26, 26, 46, 0.95)', 
+              border: '1px solid rgba(63, 136, 242, 0.3)',
+              backdropFilter: 'blur(20px)',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
+            }}
+          >
+            <Grid container spacing={2} alignItems="center">
+              <Grid item xs={12} sm={4}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  {getTabConfig(activeTab).icon}
+                  <Box>
+                    <Typography variant="caption" color="primary.light" sx={{ fontWeight: 600, display: 'block' }}>
+                      Current View
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.75rem' }}>
+                      {getTabConfig(activeTab).label} • {getTimeRangeLabel()}
+                    </Typography>
+                  </Box>
+                </Box>
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <BarChart3 size={16} color="#3f88f2" />
+                  <Box>
+                    <Typography variant="caption" color="primary.light" sx={{ fontWeight: 600, display: 'block' }}>
+                      Data Points
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.75rem' }}>
+                      {getDataPointCount().toLocaleString()} samples
+                    </Typography>
+                  </Box>
+                </Box>
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <TrendingUp size={16} color="#4caf50" />
+                  <Box>
+                    <Typography variant="caption" color="primary.light" sx={{ fontWeight: 600, display: 'block' }}>
+                      Last Updated
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.75rem' }}>
+                      {format(lastUpdate, 'HH:mm:ss')}
+                    </Typography>
+                  </Box>
+                </Box>
+              </Grid>
+            </Grid>
+          </Box>
         </Box>
       </Fade>
     );
-  }, [loading, activeTab, historicalData, timeRange]);
+  }, [loading, activeTab, historicalData, timeRange, lastUpdate, getDataPointCount, getTimeRangeLabel]);
 
   return (
     <Card 
@@ -419,49 +477,8 @@ const HistoricalDataSection = ({ data, loading, isMobile }: HistoricalDataSectio
         </Tabs>
       </Box>
       
-      <CardContent sx={{ pt: 2, pb: 1 }}>
+      <CardContent sx={{ pt: 2, pb: 1, position: 'relative' }}>
         {chartContent}
-        
-        {/* Moved info box down with more spacing */}
-        <Fade in timeout={800}>
-          <Box 
-            sx={{ 
-              mt: 4, // Increased margin top to push it down
-              p: 2,
-              borderRadius: 2,
-              bgcolor: 'rgba(63, 136, 242, 0.08)', 
-              border: '1px solid rgba(63, 136, 242, 0.2)',
-              backdropFilter: 'blur(10px)',
-            }}
-          >
-            <Grid container spacing={2} alignItems="center">
-              <Grid item xs={12} sm={4}>
-                <Typography variant="subtitle2" color="primary.light" sx={{ mb: 0.5, fontWeight: 600 }}>
-                  Current View
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {getTabConfig(activeTab).label} • {getTimeRangeLabel()}
-                </Typography>
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <Typography variant="subtitle2" color="primary.light" sx={{ mb: 0.5, fontWeight: 600 }}>
-                  Data Points
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {getDataPointCount().toLocaleString()} samples
-                </Typography>
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <Typography variant="subtitle2" color="primary.light" sx={{ mb: 0.5, fontWeight: 600 }}>
-                  Last Updated
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {format(lastUpdate, 'HH:mm:ss')}
-                </Typography>
-              </Grid>
-            </Grid>
-          </Box>
-        </Fade>
       </CardContent>
     </Card>
   );

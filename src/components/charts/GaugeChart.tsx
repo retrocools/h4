@@ -12,9 +12,21 @@ interface GaugeChartProps {
     warning: [number, number];
     danger: [number, number];
   };
+  statusLabel?: string;
+  statusColor?: string;
 }
 
-const GaugeChart = ({ value, title, min, max, unit, color, thresholds }: GaugeChartProps) => {
+const GaugeChart = ({ 
+  value, 
+  title, 
+  min, 
+  max, 
+  unit, 
+  color, 
+  thresholds, 
+  statusLabel,
+  statusColor 
+}: GaugeChartProps) => {
   const range = max - min;
   const normalizedValue = Math.max(Math.min(value, max), min) - min;
   const percentage = (normalizedValue / range) * 100;
@@ -41,7 +53,7 @@ const GaugeChart = ({ value, title, min, max, unit, color, thresholds }: GaugeCh
   ];
 
   return (
-    <Box sx={{ width: '100%', height: 160, position: 'relative' }}>
+    <Box sx={{ width: '100%', height: 140, position: 'relative' }}>
       {title && (
         <Typography 
           variant="subtitle1" 
@@ -61,11 +73,11 @@ const GaugeChart = ({ value, title, min, max, unit, color, thresholds }: GaugeCh
           <Pie
             data={backgroundData}
             cx="50%"
-            cy="85%"
+            cy="90%"
             startAngle={180}
             endAngle={0}
-            innerRadius={50}
-            outerRadius={60}
+            innerRadius={45}
+            outerRadius={55}
             paddingAngle={0}
             dataKey="value"
           >
@@ -78,11 +90,11 @@ const GaugeChart = ({ value, title, min, max, unit, color, thresholds }: GaugeCh
           <Pie
             data={data}
             cx="50%"
-            cy="85%"
+            cy="90%"
             startAngle={180}
             endAngle={0}
-            innerRadius={40}
-            outerRadius={50}
+            innerRadius={35}
+            outerRadius={45}
             paddingAngle={0}
             dataKey="value"
           >
@@ -93,24 +105,41 @@ const GaugeChart = ({ value, title, min, max, unit, color, thresholds }: GaugeCh
                 const { cx, cy } = viewBox as { cx: number; cy: number };
                 return (
                   <g>
+                    {/* Status label at the top of gauge */}
+                    {statusLabel && (
+                      <text
+                        x={cx}
+                        y={cy - 35}
+                        textAnchor="middle"
+                        dominantBaseline="central"
+                        fill={statusColor || color}
+                        fontSize="10"
+                        fontWeight="600"
+                        style={{ textTransform: 'uppercase' }}
+                      >
+                        {statusLabel}
+                      </text>
+                    )}
+                    {/* Value */}
                     <text
                       x={cx}
-                      y={cy - 10}
+                      y={cy - 15}
                       textAnchor="middle"
                       dominantBaseline="central"
                       fill="#fff"
-                      fontSize="20"
+                      fontSize="18"
                       fontWeight="bold"
                     >
                       {value.toFixed(1)}
                     </text>
+                    {/* Unit */}
                     <text
                       x={cx}
-                      y={cy + 10}
+                      y={cy + 5}
                       textAnchor="middle"
                       dominantBaseline="central"
                       fill="#aaa"
-                      fontSize="11"
+                      fontSize="10"
                     >
                       {unit}
                     </text>
@@ -132,7 +161,7 @@ const GaugeChart = ({ value, title, min, max, unit, color, thresholds }: GaugeCh
       <Box 
         sx={{ 
           position: 'absolute', 
-          bottom: 5, 
+          bottom: 0, 
           left: 0, 
           width: '100%', 
           display: 'flex', 
